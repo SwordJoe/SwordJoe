@@ -1,17 +1,15 @@
 #include<iostream>
-#include<string>
-#include<cstring>
+#include"String.h"
 using namespace std;
 
 
 int main()
 {
-    char *str = nullptr;
-    char *_pStr = new char[strlen(str) + 1];
-    strcpy(str, _pStr);
-    cout<<_pStr<<endl;
-    cout<<strlen(_pStr)<<endl;
-
-
-    cout<<"hel"<<endl;
+    String str1;
+    String str2("hello world");
+    String str3(str2);
+    str1 = str3;
+    cout<<str1<<endl;
+    str1[0]='H';
+    cout<<str1<<endl;
 }
