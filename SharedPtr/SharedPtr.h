@@ -13,6 +13,13 @@ public:
     SharedPtr(SharedPtr &&);                    //移动构造函数
     SharedPtr& operator= (SharedPtr &&);        //移动赋值运算符函数
     ~SharedPtr();
+    
+    T& operator*(){ 
+        if(_ptr){
+            cout<<"不空"<<endl;
+            return *_ptr;
+        }
+    }
 
     int useCnt() const { return _pcnt ? *_pcnt : 0; }
 
