@@ -1,0 +1,13 @@
+[requires]
+opencv/4.1.2@simiris/stable
+
+[generators]
+cmake
+
+[options]
+
+
+[imports]
+bin, *.so* -> ./bin
+lib, *.so* -> ./bin
+lib64, *.so* -> ./bin
