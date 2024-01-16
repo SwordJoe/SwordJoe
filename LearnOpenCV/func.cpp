@@ -2,11 +2,26 @@
 #include<opencv2/highgui/highgui.hpp>
 #include<opencv2/imgproc/imgproc.hpp>
 #include<opencv2/imgproc/types_c.h>
+using namespace std;
 
 const char* LENA = "E:\\PicForTest\\lena.jpg";
 const char* MAPLELEAF = "E:\\PicForTest\\mapleLeaf.jpg";
 
-bool comparePoints(const Point& a, const Point& b, const Point& center) {
+//计算多边形的中心点（质心）
+Point computeCenterPoint(const vector<Point>& points) {
+	Point centerPoint(0, 0);
+	for (auto p : points) {
+		centerPoint.x += p.x;
+		centerPoint.y += p.y;
+	}
+
+	centerPoint.x /= points.size();
+	centerPoint.y /= points.size();
+
+	return centerPoint;
+}
+//以质心为参考点，逆时针排列顶点
+bool comparePointsClockWise(const Point& a, const Point& b, const Point& center) {
 	double angleA = atan2(a.y - center.y, a.x - center.x);
 	double angleB = atan2(b.y - center.y, b.x - center.x);
 	return angleA < angleB;
@@ -154,7 +169,7 @@ void test_randu() {
 	// 对顶点进行排序
 	Point center(image.cols / 2, image.rows / 2);
 	sort(points.begin(), points.end(), [center](const Point& a, const Point& b) {
-		return comparePoints(a, b, center);
+		return comparePointsClockWise(a, b, center);
 		});
 	std::cout << "随机生成的顶点坐标:\n";
 	for (auto p : points) { 
@@ -165,7 +180,7 @@ void test_randu() {
 	// 将多边形绘制在图像上
 	vector<vector<Point>> contours;
 	contours.push_back(points);
-	drawContours(image, contours, 0, Scalar(255, 255, 255), FILLED);
+	drawContours(image, contours, 0, Scalar(255, 255, 255), 1);
 
 
 	// 设置图像中某个点的颜色值为红色 (0, 0, 255)
@@ -183,6 +198,54 @@ void test_randu() {
 	imshow("Random Polygon", image);
 	waitKey(0);
 	destroyAllWindows();
+}
 
+double CalcPolygonArea(vector<Point>& Polygon) {
+	double area = 0;
+	int n = Polygon.size();
+	if (Polygon.size() < 0) {
+		return 0.0;
+	}
 
+	Point prev;
+	prev.x = Polygon[n - 1].x;
+	prev.y = Polygon[n - 1].y;
+
+	for (int i = 0; i < n; ++i) {
+		area += (double)prev.x * Polygon[i].y - (double)prev.y * Polygon[i].x;
+		prev = Polygon[i];
+	}
+
+	area *= 0.5;
+
+	return area;
+}
+
+bool test_CalcPolygonArea() {
+	vector<Point> points;
+	srand(static_cast<unsigned>(time(0)));
+
+	for (int i = 0; i < 10; ++i) {
+		points.emplace_back(rand() % 500, rand() % 500);
+	}
+
+	/*for (auto p : points) {
+		cout << p.x << " " << p.y << endl;
+	}
+	cout << "\n";*/
+
+	Point centerPoint = computeCenterPoint(points);
+	sort(points.begin(), points.end(), [centerPoint](Point p1, Point p2) {
+		return comparePointsClockWise(p1, p2, centerPoint);
+		});
+	/*for (auto p : points) {
+		cout << p.x << " " << p.y << "\t" << atan2(p.y - centerPoint.y, p.x - centerPoint.x) << endl;
+	}*/
+
+	//cout << endl;
+
+	double area1 = CalcPolygonArea(points);
+	double area2 = contourArea(points);
+	
+	return area1 == area2;
 }
