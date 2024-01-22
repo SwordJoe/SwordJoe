@@ -1,0 +1,12 @@
+[requires]
+boost/1.73.0@simiris/stable
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[options]
+
+
+[layout]
+cmake_layout

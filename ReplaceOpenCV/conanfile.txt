@@ -1,5 +1,5 @@
 [requires]
-opencv/4.1.2@simiris/stable
+boost/1.83.0@simiris/stable
 
 [generators]
 cmake

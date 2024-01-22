@@ -210,7 +210,8 @@ double CalcPolygonArea(vector<Point>& Polygon) {
 	Point prev;
 	prev.x = Polygon[n - 1].x;
 	prev.y = Polygon[n - 1].y;
-
+	
+	//算法原理：https://zhuanlan.zhihu.com/p/110025234
 	for (int i = 0; i < n; ++i) {
 		area += (double)prev.x * Polygon[i].y - (double)prev.y * Polygon[i].x;
 		prev = Polygon[i];
